@@ -103,7 +103,31 @@ blockchain = Blockchain()
 
 @app.route('/mine', methods=['GET'])
 def mine() :
-    return "We'll mine a new block"
+    #We ru the proof of work algorithm to get the next proof...
+    lastBlock = blockchain.lastBlock
+    lastProof = lastBlock['proof']
+    proof = blockchain.proofOfWork(lastProof)
+
+    #we must recieve a reward for finding the proof
+    #the sender is "0" to signify that this node has mined a new coin
+    blockchain.newTransaction(
+        sender="0",
+        recipient=nodeIdentifier,
+        amount=1
+    )
+
+    #Forge the new block by adding it to the chain
+    previousHash = blockchain.hash(lastBlock)
+    block = blockchain.newBlock(proof, previousHash)
+
+    response = {
+        'message': "New Block Forged",
+        'index': block['index'],
+        'transactions': block['transactions'],
+        'proof': block['proof'],
+        'previousHash': block['previousHash']
+    }
+    return jsonify(response), 200
 
 @app.route('/transactions/new', methods=['POST'])
 def newTransaction() :
