@@ -7,9 +7,20 @@ class Blockchain() :
         #Create a new block and adds it to the chain
         pass
 
-    def newTransaction(self) :
-        #Adds new transaction to the list of transactions
-        pass
+    def newTransaction(self, sender, recipient, amount) :
+        """
+        Creates a new transaction to go into the next mined block
+        :param sender: <str> Address of the sender
+        :param recipient: <str> Address of the recipient
+        :param amount: <int> Amount
+        :return: <int> The index of theBlock that will hold this transaction
+        """
+        self.currentTransactions.append({
+            'sender': sender,
+            'recipient': recipient,
+            'amount': amount
+        })
+        return self.lastBlock['index'] + 1
     
     @staticmethod
     def hash(block):
@@ -17,6 +28,6 @@ class Blockchain() :
         pass
 
     @property
-    def lasBlock(self):
+    def lastBlock(self):
         #Returns the last blockin the chain
         pass
