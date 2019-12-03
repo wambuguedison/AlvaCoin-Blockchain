@@ -2,6 +2,7 @@ import hashlib
 import json
 from textwrap import dedent
 from time import time
+from urllib.parse import urlparse
 from uuid import uuid4
 
 from flask import Flask, jsonify, render_template, request
