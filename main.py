@@ -4,7 +4,7 @@ from textwrap import dedent
 from time import time
 from uuid import uuid4
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, render_template, request
 
 class Blockchain() :
     def __init__(self) :
@@ -22,7 +22,7 @@ class Blockchain() :
         :return: <dict> New block
         """
         block = {
-            'index': len(self.chain) + 1
+            'index': len(self.chain) + 1,
             'timestamp': time(),
             'transactions': self.currentTransactions,
             'proof': proof,
@@ -90,7 +90,7 @@ class Blockchain() :
 
         guess = f'{lastProof}{proof}'.encode()
         guessHash = hashlib.sha256(guess).hexdigest()
-        return guessHash[:4] ==== "0000"
+        return guessHash[:4] == "0000"
 
 #Instantiate our node
 app = Flask(__name__)
@@ -100,6 +100,10 @@ nodeIdentifier = str(uuid4()).replace("-", "")
 
 #instantiate our blockchain
 blockchain = Blockchain()
+
+@app.route('/')
+def index() :
+    return render_template("index.html")
 
 @app.route('/mine', methods=['GET'])
 def mine() :
@@ -152,4 +156,4 @@ def fullChain() :
     return jsonify(response), 200
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    app.run(debug=True)
