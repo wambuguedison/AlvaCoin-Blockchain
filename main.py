@@ -11,6 +11,7 @@ class Blockchain() :
     def __init__(self) :
         self.chain = []
         self.currentTransactions = []
+        self.nodes = set()
 
         #Create Genesis Block
         self.newBlock(previousHash = 1, proof = 100)
@@ -92,6 +93,15 @@ class Blockchain() :
         guess = f'{lastProof}{proof}'.encode()
         guessHash = hashlib.sha256(guess).hexdigest()
         return guessHash[:4] == "0000"
+
+    def registerNode(self, address):
+        """
+        Add a new node to the list of nodes
+        :param address: <str> Address of the node. Eg 'http://192.168.0.5:5000'
+        :return: None
+        """
+        parsedUrl = urlparse(address)
+        self.nodes.add(parsedUrl.netloc)
 
 #Instantiate our node
 app = Flask(__name__)
