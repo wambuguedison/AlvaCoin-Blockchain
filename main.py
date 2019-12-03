@@ -104,6 +104,34 @@ class Blockchain() :
         parsedUrl = urlparse(address)
         self.nodes.add(parsedUrl.netloc)
 
+    def validChain(self, chain):
+        """
+        Determine if a given blockchain is valid
+        :param chain: <list>A Blockchain
+        :return: <bool> True if valid, False if not
+        """
+        
+        lastBlock = chain[0]
+        currentIndex = 1
+
+        while currentIndex < len(chain):
+            block = chain[currentIndex]
+            print("{}".format(lastBlock))
+            print("{}".format(block))
+            print("\n-------------------\n")
+            #check the hash of the block is correct
+            if block["previousHash"]!= self.hash(lastBlock):
+                return False
+
+            #check that the proof of work is correct
+            if not self.validProof(lastBlock["proof"], block["proof"]):
+                return False
+
+            lastBlock = block
+            currentIndex += 1
+
+        return True
+
 #Instantiate our node
 app = Flask(__name__)
 
